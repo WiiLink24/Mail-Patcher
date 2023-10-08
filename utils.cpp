@@ -1,12 +1,12 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <gccore.h>
 #include "utils.h"
 
 static fstats stats ATTRIBUTE_ALIGN(32);
-#define ISFS_EEXIST -105
-#define ISFS_ENOENT -105
+constexpr s32 ISFS_EEXIST = -105;
+constexpr s32 ISFS_ENOENT = -106;
 
 
 void *ISFS_GetFile(const char *path, u32 *size) {
@@ -15,10 +15,10 @@ void *ISFS_GetFile(const char *path, u32 *size) {
   s32 fd = ISFS_Open(path, ISFS_OPEN_READ);
   if (fd < 0) {
     printf("ISFS_GetFile: unable to open file (error %d)\n", fd);
-    return NULL;
+    return nullptr;
   }
 
-  void *buf = NULL;
+  void *buf = nullptr;
   memset(&stats, 0, sizeof(fstats));
 
   s32 ret = ISFS_GetFileStats(fd, &stats);
@@ -35,7 +35,7 @@ void *ISFS_GetFile(const char *path, u32 *size) {
 
     buf = aligned_alloc(32, aligned_length);
 
-    if (buf != NULL) {
+    if (buf != nullptr) {
       s32 tmp_size = ISFS_Read(fd, buf, length);
 
       if (tmp_size == length) {

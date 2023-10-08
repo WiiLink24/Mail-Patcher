@@ -1,7 +1,5 @@
 #include <iostream>
 #include <gccore.h>
-#include <wiisocket.h>
-#include <cstring>
 #include "config.h"
 
 static int DisplayError(NWC24Config& config, std::string message, int error_code)
@@ -48,7 +46,7 @@ int Patcher()
   // Now that we successfully added to the server, update the URLs and email.
   // We have to reload the config as KD would have flushed the new mlchkid and password.
   config = NWC24Config();
-  config.SetEmail("@wiilink24.com");
+  config.SetEmail("@mail.wiilink24.com");
   config.SetURLs();
   config.SetCreationStage(NWC24CreationStage::Registered);
   config.WriteConfig();
