@@ -2,7 +2,7 @@
 #include <gccore.h>
 #include "config.h"
 
-static int DisplayError(NWC24Config& config, std::string message, int error_code)
+static int DisplayError(NWC24Config& config, std::string_view message, s32 error_code)
 {
   // Reset back to registered or WiiConnect24 will completely break.
   config.SetCreationStage(NWC24CreationStage::Registered);
@@ -14,6 +14,16 @@ static int DisplayError(NWC24Config& config, std::string message, int error_code
   std::cout << "Server Link: https://discord.gg/reqUMqxu8D" << std::endl;
   std::cout << std::endl << "Press the HOME Button to exit." << std::endl;
   return error_code;
+}
+
+static s32 GetWC24Error(s32 wc24_fd, NWC24Config& config)
+{
+  void *io_buf = std::malloc(256);
+  s32 ret = IOS_Ioctl(wc24_fd, 0x1E, nullptr, 0, io_buf, 256);
+  if (ret < 0)
+    return DisplayError(config, "A fatal error has occurred in the WC24 device.", ret);
+
+  return reinterpret_cast<s32 *>(io_buf)[2];
 }
 
 int Patcher()
@@ -41,7 +51,10 @@ int Patcher()
 
   const s32 response = reinterpret_cast<s32 *>(io_buf)[0];
   if (response != 0)
-    return DisplayError(config, "An error has occurred in the patching process.", response);
+  {
+    const s32 wc24_error = GetWC24Error(fd, config);
+    return DisplayError(config, "An error has occurred in the patching process.", wc24_error);
+  }
 
   // Now that we successfully added to the server, update the URLs and email.
   // We have to reload the config as KD would have flushed the new mlchkid and password.
