@@ -24,7 +24,7 @@ int main() {
   std::cout << std::endl;
   std::cout << std::endl;
   std::cout << "WiiLink Mail Patcher - (c) 2023 WiiLink" << std::endl;
-  std::cout << "v0.2" << std::endl;
+  std::cout << "v1.0" << std::endl;
   std::cout << std::endl;
   std::cout << "Patching..." << std::endl;
   std::cout << std::endl;
