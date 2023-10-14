@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include <gccore.h>
 #include "config.h"
 
@@ -26,6 +27,24 @@ static s32 GetWC24Error(s32 wc24_fd, NWC24Config& config)
   return reinterpret_cast<s32 *>(io_buf)[2];
 }
 
+static s32 GetSystemMenuIOS() {
+  s32 ret;
+  u32 view_size{};
+
+  ret = ES_GetTMDViewSize(0x100000002LL, &view_size);
+  if (ret < 0)
+    return ret;
+
+  alignas(0x20) std::vector<u8> _buffer(view_size);
+  tmd_view* tmd = reinterpret_cast<tmd_view*>(_buffer.data());
+  ret = ES_GetTMDView(0x100000002LL, _buffer.data(), view_size);
+  if (ret < 0)
+    return ret;
+
+  return static_cast<s32>(tmd->sys_version);
+
+}
+
 int Patcher()
 {
   // This is hacky but the easiest way to go about patching.
@@ -38,7 +57,12 @@ int Patcher()
   config.SetAccountURL();
   config.WriteConfig();
 
-  IOS_ReloadIOS(80);
+  s32 IOS = GetSystemMenuIOS();
+  if (IOS < 0)
+    return DisplayError(config, "Unable to retrieve the Wii Menu's IOS.", IOS);
+
+  IOS_ReloadIOS(IOS);
+
   s32 fd = IOS_Open("/dev/net/kd/request", IPC_OPEN_READ);
   if (fd < 0)
     return DisplayError(config, "An Error has occurred while opening the WC24 device.", fd);
