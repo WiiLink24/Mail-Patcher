@@ -22,6 +22,8 @@ public:
     u32 CalculateNwc24ConfigChecksum() const;
     s32 CheckNwc24Config() const;
 
+    u64 GetFriendCode() const;
+
     u32 IdGen() const;
     void SetIdGen(u32 id_generation);
     void IncrementIdGen();
