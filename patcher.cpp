@@ -11,7 +11,8 @@ static int DisplayError(NWC24Config& config, std::string_view message, s32 error
 
   std::cout << message << std::endl;
   printf("Error Code: %d\n", error_code);
-  std::cout << "Please doing the WiiLink Discord for support." << std::endl;
+  std::cout << "Wii number: " << config.GetFriendCode() << std::endl << std::endl;
+  std::cout << "Please join the WiiLink Discord for support." << std::endl;
   std::cout << "Server Link: https://discord.gg/reqUMqxu8D" << std::endl;
   std::cout << std::endl << "Press the HOME Button to exit." << std::endl;
   return error_code;

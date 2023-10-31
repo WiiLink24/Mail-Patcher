@@ -122,3 +122,8 @@ void NWC24Config::SetURLs()
   std::strncpy(m_data.http_urls[4], "http://mtw.wiilink24.com/cgi-bin/send.cgi", MAX_URL_LENGTH);
   m_data.http_urls[4][MAX_URL_LENGTH - 1] = '\0';
 }
+
+u64 NWC24Config::GetFriendCode() const
+{
+  return m_data.nwc24_id;
+}
