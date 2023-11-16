@@ -2,6 +2,7 @@
 #include <vector>
 #include <gccore.h>
 #include "config.h"
+#include "errors.h"
 
 static int DisplayError(NWC24Config& config, std::string_view message, s32 error_code)
 {
@@ -10,11 +11,23 @@ static int DisplayError(NWC24Config& config, std::string_view message, s32 error
   config.WriteConfig();
 
   std::cout << message << std::endl;
-  printf("Error Code: %d\n", error_code);
-  std::cout << "Wii number: " << config.GetFriendCode() << std::endl << std::endl;
+  std::cout << "Error Code: " << error_code << std::endl;
+
+  // Get a pre-made message if applicable
+  s32 error_code_start = error_code;
+  while (error_code_start < -9 || error_code_start > 9)
+    error_code_start /= 10;
+
+  if (error_code_start == -5)
+    error_code = error_code_start;
+
+  if (auto found = error_descriptions.find(error_code); found != error_descriptions.end())
+    std::cout << found->second << std::endl;
+
+  std::cout << "Wii Number: " << config.GetFriendCode() << std::endl << std::endl;
   std::cout << "Please join the WiiLink Discord for support." << std::endl;
-  std::cout << "Server Link: https://discord.gg/reqUMqxu8D" << std::endl;
-  std::cout << std::endl << "Press the HOME Button to exit." << std::endl;
+  std::cout << "Server Link: https://discord.gg/reqUMqxu8D" << std::endl << std::endl ;
+  std::cout << "Press the HOME Button to exit." << std::endl;
   return error_code;
 }
 
