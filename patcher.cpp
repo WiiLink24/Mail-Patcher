@@ -49,9 +49,9 @@ static s32 GetSystemMenuIOS() {
   if (ret < 0)
     return ret;
 
-  alignas(0x20) std::vector<u8> _buffer(view_size);
-  tmd_view* tmd = reinterpret_cast<tmd_view*>(_buffer.data());
-  ret = ES_GetTMDView(0x100000002LL, _buffer.data(), view_size);
+  u8* buffer = reinterpret_cast<u8*>(aligned_alloc(32, view_size));
+  tmd_view* tmd = reinterpret_cast<tmd_view*>(buffer);
+  ret = ES_GetTMDView(0x100000002LL, buffer, view_size);
   if (ret < 0)
     return ret;
 
