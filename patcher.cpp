@@ -25,8 +25,8 @@ static int DisplayError(NWC24Config& config, std::string_view message, s32 error
     std::cout << found->second << std::endl;
 
   std::cout << "Wii Number: " << config.GetFriendCode() << std::endl << std::endl;
-  std::cout << "Please join the WiiLink Discord for support." << std::endl;
-  std::cout << "Server Link: https://discord.gg/reqUMqxu8D" << std::endl << std::endl ;
+  std::cout << "Please join the RiiConnect24 Discord for support." << std::endl;
+  std::cout << "Server Link: https://discord.gg/rc24" << std::endl << std::endl ;
   std::cout << "Press the HOME Button to exit." << std::endl;
   return error_code;
 }
@@ -97,12 +97,12 @@ int Patcher()
   // Now that we successfully added to the server, update the URLs and email.
   // We have to reload the config as KD would have flushed the new mlchkid and password.
   config = NWC24Config();
-  config.SetEmail("@mail.wiilink24.com");
+  config.SetEmail("@rc24.xyz");
   config.SetURLs();
   config.SetCreationStage(NWC24CreationStage::Registered);
   config.WriteConfig();
-  std::cout << "Patching succeeded! You can now use the WiiLink Mail Service!" << std::endl;
-  std::cout << "Thank you for installing WiiLink!" << std::endl;
+  std::cout << "Patching succeeded! You can now use the RiiConnect24 Mail Service!" << std::endl;
+  std::cout << "Thank you for installing RiiConnect24!" << std::endl;
   std::cout << std::endl << "Press the HOME Button to exit." << std::endl;
 
   return 0;

@@ -1,5 +1,5 @@
 # Mail-Patcher
-Patcher for WiiLink Mail. Work in Progress.
+Patcher for RiiConnect24
 
 CMake support is from Dolphin Emulator's [hwtest repo](https://github.com/dolphin-emu/hwtests)
 
@@ -10,5 +10,5 @@ CMake support is from Dolphin Emulator's [hwtest repo](https://github.com/dolphi
 - DEVKITPRO and DEVKITPPC environment variables (see devkitPPC documentation)
 
 ## How it works
-Unlike the [RiiConnect24 Mail Patcher](https://github.com/RiiConnect24/Mail-Patcher), this patcher utilizes the built-in 
-registration function of WiiConnect24. It then updates the URL's in `/shared2/wc24/nwc24msg.cfg` to point to WiiLink's servers.
+This patcher utilizes the built-in 
+registration function of WiiConnect24. It then updates the URL's in `/shared2/wc24/nwc24msg.cfg` to point to RiiConnect24's servers.

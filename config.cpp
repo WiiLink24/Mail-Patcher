@@ -102,24 +102,24 @@ void NWC24Config::SetEmail(std::string_view email)
 
 void NWC24Config::SetAccountURL()
 {
-  std::strncpy(m_data.http_urls[0], "http://mtw.wiilink24.com/cgi-bin/account.cgi", MAX_URL_LENGTH);
+  std::strncpy(m_data.http_urls[0], "http://mtw.rc24.xyz/cgi-bin/account.cgi", MAX_URL_LENGTH);
   m_data.http_urls[0][MAX_URL_LENGTH - 1] = '\0';
 }
 void NWC24Config::SetURLs()
 {
-  std::strncpy(m_data.http_urls[0], "http://mtw.wiilink24.com/cgi-bin/account.cgi", MAX_URL_LENGTH);
+  std::strncpy(m_data.http_urls[0], "http://mtw.rc24.xyz/cgi-bin/account.cgi", MAX_URL_LENGTH);
   m_data.http_urls[0][MAX_URL_LENGTH - 1] = '\0';
 
-  std::strncpy(m_data.http_urls[1], "http://mtw.wiilink24.com/cgi-bin/check.cgi", MAX_URL_LENGTH);
+  std::strncpy(m_data.http_urls[1], "http://mtw.rc24.xyz/cgi-bin/check.cgi", MAX_URL_LENGTH);
   m_data.http_urls[1][MAX_URL_LENGTH - 1] = '\0';
 
-  std::strncpy(m_data.http_urls[2], "http://mtw.wiilink24.com/cgi-bin/receive.cgi", MAX_URL_LENGTH);
+  std::strncpy(m_data.http_urls[2], "http://mtw.rc24.xyz/cgi-bin/receive.cgi", MAX_URL_LENGTH);
   m_data.http_urls[2][MAX_URL_LENGTH - 1] = '\0';
 
-  std::strncpy(m_data.http_urls[3], "http://mtw.wiilink24.com/cgi-bin/delete.cgi", MAX_URL_LENGTH);
+  std::strncpy(m_data.http_urls[3], "http://mtw.rc24.xyz/cgi-bin/delete.cgi", MAX_URL_LENGTH);
   m_data.http_urls[3][MAX_URL_LENGTH - 1] = '\0';
 
-  std::strncpy(m_data.http_urls[4], "http://mtw.wiilink24.com/cgi-bin/send.cgi", MAX_URL_LENGTH);
+  std::strncpy(m_data.http_urls[4], "http://mtw.rc24.xyz/cgi-bin/send.cgi", MAX_URL_LENGTH);
   m_data.http_urls[4][MAX_URL_LENGTH - 1] = '\0';
 }
 
