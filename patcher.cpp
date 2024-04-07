@@ -25,8 +25,8 @@ static int DisplayError(NWC24Config& config, std::string_view message, s32 error
     std::cout << found->second << std::endl;
 
   std::cout << "Wii Number: " << config.GetFriendCode() << std::endl << std::endl;
-  std::cout << "Please join the RiiConnect24 Discord for support." << std::endl;
-  std::cout << "Server Link: https://discord.gg/rc24" << std::endl << std::endl ;
+  std::cout << "Please join the WiiLink Discord for support." << std::endl;
+  std::cout << "Server Link: https://discord.gg/wiilink" << std::endl << std::endl ;
   std::cout << "Press the HOME Button to exit." << std::endl;
   return error_code;
 }
@@ -62,7 +62,6 @@ static s32 GetSystemMenuIOS() {
 int Patcher()
 {
   // This is hacky but the easiest way to go about patching.
-  // RiiConnect24's patcher has to handle parsing everything which is a bit yuck.
   // We can utilize the Request Register User ID ioctl within KD.
   // Before doing that however, we must set the registration flag to `Generated` then reload IOS.
   // We must also set the account URL to ours.
@@ -101,8 +100,8 @@ int Patcher()
   config.SetURLs();
   config.SetCreationStage(NWC24CreationStage::Registered);
   config.WriteConfig();
-  std::cout << "Patching succeeded! You can now use the RiiConnect24 Mail Service!" << std::endl;
-  std::cout << "Thank you for installing RiiConnect24!" << std::endl;
+  std::cout << "Patching succeeded! You can now use the WiiLink Mail Service!" << std::endl;
+  std::cout << "Thank you for installing WiiLink!" << std::endl;
   std::cout << std::endl << "Press the HOME Button to exit." << std::endl;
 
   return 0;
