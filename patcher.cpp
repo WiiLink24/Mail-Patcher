@@ -1,4 +1,5 @@
 #include <iostream>
+#include <format>
 #include <vector>
 #include <gccore.h>
 #include "config.h"
@@ -24,7 +25,10 @@ static int DisplayError(NWC24Config& config, std::string_view message, s32 error
   if (auto found = error_descriptions.find(error_code); found != error_descriptions.end())
     std::cout << found->second << std::endl;
 
-  std::cout << "Wii Number: " << config.GetFriendCode() << std::endl << std::endl;
+  s64 wiino = config.GetFriendCode();
+  // s64 wiino = 595'0972'0461'0244;
+
+  std::cout << "Wii Number: " << std::format("{:04}-{:04}-{:04}-{:04}", (wiino / (u64)1e+12) % 10000, (wiino / (u64)1e+8) % 10000, (wiino / (u64)1e+4) % 10000, wiino % 10000) << std::endl << std::endl;
   std::cout << "Please join the WiiLink Discord for support." << std::endl;
   std::cout << "Server Link: https://discord.gg/wiilink" << std::endl << std::endl ;
   std::cout << "Press the HOME Button to exit." << std::endl;
@@ -49,18 +53,18 @@ static s32 GetSystemMenuIOS() {
   if (ret < 0)
     return ret;
 
-  u8* buffer = reinterpret_cast<u8*>(aligned_alloc(32, view_size));
-  tmd_view* tmd = reinterpret_cast<tmd_view*>(buffer);
-  ret = ES_GetTMDView(0x100000002LL, buffer, view_size);
+  tmd_view* view = reinterpret_cast<tmd_view*>(aligned_alloc(32, view_size));
+  ret = ES_GetTMDView(0x100000002LL, view, view_size);
   if (ret < 0)
     return ret;
 
-  return static_cast<s32>(tmd->sys_version);
+  return static_cast<s32>(view->sys_version);
 
 }
 
 int Patcher()
 {
+
   // This is hacky but the easiest way to go about patching.
   // We can utilize the Request Register User ID ioctl within KD.
   // Before doing that however, we must set the registration flag to `Generated` then reload IOS.
