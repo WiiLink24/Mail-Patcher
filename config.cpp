@@ -94,6 +94,10 @@ void NWC24Config::SetCreationStage(NWC24CreationStage creation_stage)
   m_data.creation_stage = NWC24CreationStage(u32(creation_stage));
 }
 
+std::string NWC24Config::GetEmail() {
+  return m_data.email;
+}
+
 void NWC24Config::SetEmail(std::string_view email)
 {
   std::strncpy(m_data.email, email.data(), MAX_EMAIL_LENGTH);
