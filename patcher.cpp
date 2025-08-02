@@ -62,14 +62,73 @@ static s32 GetSystemMenuIOS() {
 
 }
 
+static int TestRegistration(NWC24Config& config)
+{
+  s32 fd = IOS_Open("/dev/net/kd/request", IPC_OPEN_READ);
+  if (fd < 0)
+    return DisplayError(config, "An error has occurred while opening the WC24 device.", fd);
+
+  s32 ret;
+  int tries = 5;
+  do
+  {
+    s32 outbuf[4] { /* ret, isNewMail, mailSpan, socketError */ };
+    ret = IOS_Ioctl(fd, 10, nullptr, 0, outbuf, 0x10);
+    if (ret < 0)
+    {
+      DisplayError(config, "A fatal error has occurred in the WC24 device.", ret);
+      break;
+    }
+
+    // std::cout << std::format("KD_CheckMail() ret={} soError={}", outbuf[0], outbuf[3]) << std::endl;
+
+    if (outbuf[0] == -33)
+    {
+      // std::cout << std::format("Network not available, retrying... ({}) *", outbuf[3]) << std::endl;
+      if (!tries--)
+      {
+        ret = DisplayError(config, "An error has occured during the patching process.", GetWC24Error(fd, config));
+        break;
+      }
+      continue;
+    }
+    else
+    {
+      if (outbuf[0] == 0) // OK!
+      {
+        ret = 1;
+      }
+    }
+  } while (0);
+
+  IOS_Close(fd);
+  return ret;
+}
+
 int Patcher()
 {
-
   // This is hacky but the easiest way to go about patching.
   // We can utilize the Request Register User ID ioctl within KD.
   // Before doing that however, we must set the registration flag to `Generated` then reload IOS.
   // We must also set the account URL to ours.
   NWC24Config config = NWC24Config();
+  if (config.GetEmail() == "@rc24.xyz")
+  {
+    // std::cout << "Email is already rc24.xyz, check mail now...." << std::endl;
+
+    int ret = TestRegistration(config);
+    if (ret == 1)
+    {
+      std::cout << "Your Wii is already registered for WiiLink Mail." << std::endl << std::endl;
+      std::cout << "Press the HOME Button to exit." << std::endl;
+      return 0;
+    }
+    else if (ret < 0)
+    {
+      return ret;
+    }
+  }
+
   config.SetCreationStage(NWC24CreationStage::Generated);
   config.SetAccountURL();
   config.WriteConfig();
@@ -82,20 +141,32 @@ int Patcher()
 
   s32 fd = IOS_Open("/dev/net/kd/request", IPC_OPEN_READ);
   if (fd < 0)
-    return DisplayError(config, "An Error has occurred while opening the WC24 device.", fd);
+    return DisplayError(config, "An error has occurred while opening the WC24 device.", fd);
 
-  void *io_buf = std::malloc(32);
-
-  s32 ret = IOS_Ioctl(fd, 0x10, nullptr, 0, io_buf, 32);
-  if (ret < 0)
-    return DisplayError(config, "A fatal error has occurred in the WC24 device.", ret);
-
-  const s32 response = reinterpret_cast<s32 *>(io_buf)[0];
-  if (response != 0)
+  s32 ret;
+  int tries = 5;
+  do
   {
-    const s32 wc24_error = GetWC24Error(fd, config);
-    return DisplayError(config, "An error has occurred in the patching process.", wc24_error);
-  }
+    s32 outbuf[2];
+    ret = IOS_Ioctl(fd, 0x10, nullptr, 0, outbuf, 0x8);
+    if (ret < 0)
+      return DisplayError(config, "A fatal error has occurred in the WC24 device.", ret);
+
+    // std::cout << std::format("KD_CreateAccount() ret={} soError={}", outbuf[0], outbuf[1]) << std::endl;
+
+    ret = outbuf[0];
+    if (ret == -33)
+    {
+      if (!tries--)
+        break;
+
+      // std::cout << std::format("Network not available, retrying... ({})", outbuf[1]) << std::endl;
+      continue;
+    }
+  } while (0);
+
+  if (ret != 0)
+    return DisplayError(config, "An error has occurred in the patching process.", GetWC24Error(fd, config));
 
   // Now that we successfully added to the server, update the URLs and email.
   // We have to reload the config as KD would have flushed the new mlchkid and password.

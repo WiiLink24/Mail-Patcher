@@ -38,6 +38,7 @@ public:
     bool IsGenerated() const { return CreationStage() == NWC24CreationStage::Generated; }
     bool IsRegistered() const { return CreationStage() == NWC24CreationStage::Registered; }
 
+    std::string GetEmail();
     void SetEmail(std::string_view email);
     void SetAccountURL();
     void SetURLs();
