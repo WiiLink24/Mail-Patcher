@@ -4,10 +4,16 @@ Patcher for WiiLink
 CMake support is from Dolphin Emulator's [hwtest repo](https://github.com/dolphin-emu/hwtests)
 
 ## How to compile
+
+### Dependencies:
 - CMake
 - devkitPPC
 - libogc (if not installed into ${DEVKITPRO}/libogc, a CMake variable called LIBOGCDIR needs to be specified)
 - DEVKITPRO and DEVKITPPC environment variables (see devkitPPC documentation)
+- Ninja (optional)
+
+### Usage:
+Run `./build.sh` to build the patcher.
 
 ## How it works
 This patcher utilizes the built-in 

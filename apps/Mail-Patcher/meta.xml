@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<app version="1">
+	<name>WiiLink Mail Patcher</name>
+	<version>2.1.0</version>
+	<release_date>20251108000000</release_date>
+	<coder>Sketch</coder>
+	<short_description>Patches Wii Mail to WiiLink's domain</short_description>
+	<long_description> This application patches your Wii Message Board to use WiiLink's domain, so you can start using the Wii Message Board once again.
+</long_description>
+<ahb_access/>
+</app>
