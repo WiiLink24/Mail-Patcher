@@ -1,5 +1,17 @@
 #pragma once
 
 #include <ogcsys.h>
+#include <string>
+#include <array>
+#include <vector>
 
-void *ISFS_GetFile(const char *path, u32 *size);
+struct File {
+    void* data;
+    size_t size;
+    std::string error;
+    s32 error_code;
+};
+
+constexpr s32 ISFS_ENOENT = -106;
+
+File* ISFS_GetFile(std::string_view path);

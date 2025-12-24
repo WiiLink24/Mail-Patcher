@@ -3,6 +3,7 @@ project(WiiLink-Mail-Patcher CXX)
 
 message(STATUS "Using toolchain file " ${CMAKE_TOOLCHAIN_FILE})
 
+include_directories(.)
 include_directories(${LIBOGCDIR}/include)
 include_directories(${DEVKITPRO}/portlibs/wii/include)
 include_directories(${DEVKITPRO}/portlibs/ppc/include)
@@ -22,5 +23,5 @@ set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wno-unused-function -O2 ${CMAKE_CXX_FLAGS} $
 set(CMAKE_EXECUTABLE_SUFFIX ".elf")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/apps/Mail-Patcher")
 
-add_executable(wiilink-mail-patcher main.cpp patcher.cpp config.cpp config.h utils.cpp utils.h patcher.h)
+add_executable(wiilink-mail-patcher main.cpp patcher.cpp config.cpp utils.cpp)
 target_link_libraries(wiilink-mail-patcher wiiuse bte fat ogc m)

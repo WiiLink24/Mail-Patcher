@@ -1,46 +1,47 @@
 #include "config.h"
 #include <cstring>
+#include <format>
 #include <iostream>
 #include "utils.h"
 
-constexpr const char CONFIG_PATH[] = "/shared2/wc24/nwc24msg.cfg";
+constexpr char CONFIG_PATH[] = "/shared2/wc24/nwc24msg.cfg";
 
-NWC24Config::NWC24Config()
+bool NWC24Config::ReadConfig()
 {
-  ReadConfig();
+  File* file = ISFS_GetFile(CONFIG_PATH);
+  if (file->error_code != 0) {
+    m_error = std::format("Error opening mail config file. Error code: {}", file->error_code);
+    return false;
+  }
+
+  m_data = *(static_cast<ConfigData*>(file->data));
+  return true;
 }
 
-void NWC24Config::ReadConfig()
-{
-  u32 readSize;
-  void *fileBuffer = ISFS_GetFile(CONFIG_PATH, &readSize);
-  m_data = *(reinterpret_cast<ConfigData*>(fileBuffer));
-}
-
-void NWC24Config::WriteConfig()
-{
-  WriteConfigToPath(CONFIG_PATH);
-}
-
-void NWC24Config::WriteConfigToPath(const std::string& filepath)
+bool NWC24Config::WriteConfig()
 {
   // Recalculate checksum
   m_data.checksum = CalculateNwc24ConfigChecksum();
 
-  s32 fd = ISFS_Open(filepath.c_str(), ISFS_OPEN_WRITE);
+  s32 fd = ISFS_Open(CONFIG_PATH, ISFS_OPEN_WRITE);
   if (fd < 0) {
-    printf("Error opening file at %s\n", filepath.c_str());
+    printf("Error opening file at %s\n", CONFIG_PATH);
+    return false;
   }
 
-  s32 ret = ISFS_Write(fd, reinterpret_cast<const u8 *>(&m_data), sizeof(m_data));
+  s32 ret = ISFS_Write(fd, &m_data, sizeof(m_data));
   if (ret < 0) {
-    printf("Error writing file at %s\n", filepath.c_str());
+    printf("Error writing file at %s\n", CONFIG_PATH);
+    return false;
   }
 
   ret = ISFS_Close(fd);
   if (ret < 0) {
-    printf("Error closing file at %s\n", filepath.c_str());
+    printf("Error closing file at %s\n", CONFIG_PATH);
+    return false;
   }
+
+  return true;
 }
 
 u32 NWC24Config::CalculateNwc24ConfigChecksum() const
@@ -55,6 +56,11 @@ u32 NWC24Config::CalculateNwc24ConfigChecksum() const
 
   return sum;
 }
+
+std::string_view NWC24Config::GetError() const {
+  return m_error;
+}
+
 
 s32 NWC24Config::CheckNwc24Config() const
 {

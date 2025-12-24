@@ -13,11 +13,10 @@ enum class NWC24CreationStage : u32
 class NWC24Config final
 {
 public:
-    explicit NWC24Config();
-    void ReadConfig();
-    void WriteConfig();
-    void WriteConfigToPath(const std::string& filepath);
+    bool ReadConfig();
+    bool WriteConfig();
     void ResetConfig();
+    std::string_view GetError() const;
 
     u32 CalculateNwc24ConfigChecksum() const;
     s32 CheckNwc24Config() const;
@@ -72,4 +71,5 @@ private:
 #pragma pack(pop)
 
     ConfigData m_data;
+    std::string m_error;
 };

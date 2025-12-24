@@ -31,7 +31,6 @@ static int DisplayError(NWC24Config& config, std::string_view message, s32 error
   std::cout << "Wii Number: " << std::format("{:04}-{:04}-{:04}-{:04}", (wiino / (u64)1e+12) % 10000, (wiino / (u64)1e+8) % 10000, (wiino / (u64)1e+4) % 10000, wiino % 10000) << std::endl << std::endl;
   std::cout << "Please join the WiiLink Discord for support." << std::endl;
   std::cout << "Server Link: https://discord.gg/wiilink" << std::endl << std::endl ;
-  std::cout << "Press the HOME Button to exit." << std::endl;
   return error_code;
 }
 
@@ -112,6 +111,12 @@ int Patcher()
   // Before doing that however, we must set the registration flag to `Generated` then reload IOS.
   // We must also set the account URL to ours.
   NWC24Config config = NWC24Config();
+  bool success = config.ReadConfig();
+  if (!success) {
+    std::cout << config.GetError() << std::endl;
+    return -1;
+  }
+
   if (config.GetEmail() == "@rc24.xyz")
   {
     // std::cout << "Email is already rc24.xyz, check mail now...." << std::endl;
@@ -120,7 +125,6 @@ int Patcher()
     if (ret == 1)
     {
       std::cout << "Your Wii is already registered for WiiLink Mail." << std::endl << std::endl;
-      std::cout << "Press the HOME Button to exit." << std::endl;
       return 0;
     }
     else if (ret < 0)
@@ -131,7 +135,9 @@ int Patcher()
 
   config.SetCreationStage(NWC24CreationStage::Generated);
   config.SetAccountURL();
-  config.WriteConfig();
+  success = config.WriteConfig();
+  if (!success)
+    return -1;
 
   s32 IOS = GetSystemMenuIOS();
   if (IOS < 0)
@@ -171,13 +177,21 @@ int Patcher()
   // Now that we successfully added to the server, update the URLs and email.
   // We have to reload the config as KD would have flushed the new mlchkid and password.
   config = NWC24Config();
+  success = config.ReadConfig();
+  if (!success) {
+    std::cout << config.GetError() << std::endl;
+    return -1;
+  }
+
   config.SetEmail("@rc24.xyz");
   config.SetURLs();
   config.SetCreationStage(NWC24CreationStage::Registered);
-  config.WriteConfig();
+  success = config.WriteConfig();
+  if (!success)
+    return -1;
+
   std::cout << "Patching succeeded! You can now use the WiiLink Mail Service!" << std::endl;
   std::cout << "Thank you for installing WiiLink!" << std::endl;
-  std::cout << std::endl << "Press the HOME Button to exit." << std::endl;
 
   return 0;
 }
