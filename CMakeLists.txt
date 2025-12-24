@@ -23,5 +23,5 @@ set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wno-unused-function -O2 ${CMAKE_CXX_FLAGS} $
 set(CMAKE_EXECUTABLE_SUFFIX ".elf")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/apps/Mail-Patcher")
 
-add_executable(wiilink-mail-patcher main.cpp patcher.cpp config.cpp utils.cpp)
+add_executable(wiilink-mail-patcher main.cpp patcher.cpp config.cpp utils.cpp nwc24dl.cpp)
 target_link_libraries(wiilink-mail-patcher wiiuse bte fat ogc m)

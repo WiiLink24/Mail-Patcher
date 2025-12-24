@@ -2,11 +2,14 @@
 #include <gccore.h>
 #include <wiiuse/wpad.h>
 #include "patcher.h"
+#include "nwc24dl.h"
 
 static void* xfb = nullptr;
 static GXRModeObj* rmode = nullptr;
 
 [[noreturn]] void poll_home_button() {
+  std::cout << std::endl << "Press the HOME Button to exit." << std::endl;
+
   while (true) {
     WPAD_ScanPads();
     u32 pressed = WPAD_ButtonsDown(0);
@@ -46,11 +49,41 @@ int main() {
   WPAD_Init();
   if (ret != 0) {
     // Error has occurred, abort.
-    std::cout << std::endl << "Press the HOME Button to exit." << std::endl;
     poll_home_button();
   }
 
-  std::cout << std::endl << "Press the HOME Button to exit." << std::endl;
+  // We can now have the user decide if they want to opt in to the WiiLink Announcement Service.
+  auto list = NWC24DL();
+  bool success = list.ReadConfig();
+  if (!success) {
+    std::cout << list.GetError() << std::endl;
+    poll_home_button();
+  }
+
+  // Check if they already have the download task added.
+  if (!list.AnnouncementExists()) {
+    // Prompt the user to add.
+    std::cout << std::endl << "You can also opt in to the WiiLink Announcement Service!" << std::endl;
+    std::cout << "We will occasionally send announcements about the service" << std::endl << "via the Wii Message Board" << std::endl;
+    std::cout << "Press A to opt in and HOME to return to the Wii Menu." << std::endl;
+    while (true) {
+      WPAD_ScanPads();
+      u32 pressed = WPAD_ButtonsDown(0);
+      if (pressed & WPAD_BUTTON_HOME) {
+        exit(0);
+      }
+      if (pressed & WPAD_BUTTON_A) {
+        success = list.AddAnnouncementEntry();
+        if (success) {
+          std::cout << "Successfully opted in to the WiiLink Announcement Service!" << std::endl;
+          break;
+        }
+      }
+
+      VIDEO_WaitVSync();
+    }
+  }
+
   poll_home_button();
   return 0;
 }
