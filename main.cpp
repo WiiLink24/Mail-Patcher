@@ -65,7 +65,7 @@ int main() {
     // Prompt the user to add.
     std::cout << std::endl << "You can also opt in to the WiiLink Announcement Service!" << std::endl;
     std::cout << "We will occasionally send announcements about the service" << std::endl << "via the Wii Message Board" << std::endl;
-    std::cout << "Press A to opt in and HOME to return to the Wii Menu." << std::endl;
+    std::cout << "Press A to opt in, or HOME to return to the Wii Menu." << std::endl;
     while (true) {
       WPAD_ScanPads();
       u32 pressed = WPAD_ButtonsDown(0);
@@ -75,7 +75,7 @@ int main() {
       if (pressed & WPAD_BUTTON_A) {
         success = list.AddAnnouncementEntry();
         if (success) {
-          std::cout << "Successfully opted in to the WiiLink Announcement Service!" << std::endl;
+          std::cout << std::endl << "Successfully opted in to the WiiLink Announcement Service!" << std::endl;
           break;
         }
       }
