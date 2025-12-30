@@ -3,12 +3,16 @@
 #include <gctypes.h>
 #include <string>
 
+extern "C" {
+extern u32 __SYS_GetRTC(u32 *gctime);
+}
+
 class NWC24DL {
 public:
     bool ReadConfig();
     bool WriteConfig() const;
     bool AddAnnouncementEntry();
-    bool AnnouncementExists() const;
+    bool AnnouncementExists();
     std::string_view GetError() const;
 
 private:

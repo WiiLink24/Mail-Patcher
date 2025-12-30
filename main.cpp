@@ -42,15 +42,15 @@ int main() {
   std::cout << std::endl;
   std::cout << "Patching..." << std::endl;
   std::cout << std::endl;
-  int ret = Patcher();
+ int ret = Patcher();
 
   // We reloaded IOS in the Patcher function, we have to init the devices here.
   CONF_Init();
   WPAD_Init();
-  if (ret != 0) {
+ if (ret != 0) {
     // Error has occurred, abort.
     poll_home_button();
-  }
+ }
 
   // We can now have the user decide if they want to opt in to the WiiLink Announcement Service.
   auto list = NWC24DL();
@@ -76,8 +76,9 @@ int main() {
         success = list.AddAnnouncementEntry();
         if (success) {
           std::cout << std::endl << "Successfully opted in to the WiiLink Announcement Service!" << std::endl;
-          break;
         }
+
+        break;
       }
 
       VIDEO_WaitVSync();
