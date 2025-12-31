@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <app version="1">
 	<name>WiiLink Mail Patcher</name>
-	<version>2.2.0</version>
+	<version>2.2.1</version>
 	<release_date>20251225000000</release_date>
 	<coder>Sketch</coder>
 	<short_description>Patches Wii Mail to WiiLink's domain</short_description>

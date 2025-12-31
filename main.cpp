@@ -38,19 +38,19 @@ int main() {
   std::cout << std::endl;
   std::cout << std::endl;
   std::cout << "WiiLink Mail Patcher - (c) 2025 WiiLink" << std::endl;
-  std::cout << "v2.2.0" << std::endl;
+  std::cout << "v2.2.1" << std::endl;
   std::cout << std::endl;
   std::cout << "Patching..." << std::endl;
   std::cout << std::endl;
- int ret = Patcher();
+  int ret = Patcher();
 
   // We reloaded IOS in the Patcher function, we have to init the devices here.
   CONF_Init();
   WPAD_Init();
- if (ret != 0) {
+  if (ret != 0) {
     // Error has occurred, abort.
     poll_home_button();
- }
+  }
 
   // We can now have the user decide if they want to opt in to the WiiLink Announcement Service.
   auto list = NWC24DL();

@@ -80,7 +80,7 @@ bool NWC24DL::AddAnnouncementEntry() {
     entry->unknown1 = 0x48414541;
     entry->group_id = 0x3031;
     entry->remaining_downloads = 100;
-    entry->dl_margin = 5;
+    entry->dl_margin = 120;
     entry->retry_frequency = 1440;
 
     // Allow for multiple languages!
