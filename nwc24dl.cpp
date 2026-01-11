@@ -14,8 +14,6 @@
 
 constexpr char DL_LIST_PATH[] = "/shared2/wc24/nwc24dl.bin";
 constexpr char ANNOUNCEMENT_URL[] = "http://mail.wiilink.ca/{}/announcement";
-// We doing 1 minute intervals lmao
-constexpr u32 NEXT_DOWNLOAD_IN_SECONDS = 1;
 
 bool NWC24DL::ReadConfig() {
     File* file = ISFS_GetFile(DL_LIST_PATH);
@@ -57,7 +55,6 @@ std::string_view NWC24DL::GetError() const {
 bool NWC24DL::AddAnnouncementEntry() {
     // Find an empty record.
     u16 record_idx = MAX_ENTRIES;
-    // We must start at 8 as the ones below that are observed to be reserved.
     for (u16 i = 0; i < MAX_ENTRIES; i++) {
         if (m_data.records[i].low_title_id == 0) {
             record_idx = i;
@@ -79,7 +76,7 @@ bool NWC24DL::AddAnnouncementEntry() {
     entry->low_title_id = 0x00010002;
     entry->unknown1 = 0x48414541;
     entry->group_id = 0x3031;
-    entry->remaining_downloads = 100;
+    entry->remaining_downloads = 32767;
     entry->dl_margin = 120;
     entry->retry_frequency = 1440;
 
